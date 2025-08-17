@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     stages {
-
-        // ===== FRONTEND BUILD =====
         stage('Build Frontend') {
             steps {
                 dir('frontendapp') {
@@ -13,51 +11,44 @@ pipeline {
             }
         }
 
-        // ===== FRONTEND DEPLOY =====
         stage('Deploy Frontend to Tomcat') {
             steps {
                 bat '''
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend" (
-                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
-                )
-                mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
-                xcopy /E /I /Y frontendapp\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
+                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend" (
+                        rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
+                    )
+                    mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
+                    xcopy /E /I /Y frontendapp\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-frontend"
                 '''
             }
         }
 
-        // ===== BACKEND BUILD =====
         stage('Build Backend') {
             steps {
-                dir('BACKEND') {
+                dir('BACKEND/bccimanagement') {
                     bat 'mvn clean package -DskipTests'
                 }
             }
         }
 
-        // ===== BACKEND DEPLOY =====
         stage('Deploy Backend to Tomcat') {
             steps {
                 bat '''
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-backend.war" (
-                    del /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-backend.war"
-                )
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-backend" (
-                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-backend"
-                )
-                copy "BACKEND\\target\\*.war" "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\cricket-backend.war"
+                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\CricketBackend.war" (
+                        del "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\CricketBackend.war"
+                    )
+                    copy BACKEND\\bccimanagement\\target\\CricketBackend.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
                 '''
             }
         }
-
     }
 
     post {
         success {
-            echo '✅ Deployment Successful!'
+            echo "✅ Pipeline completed successfully."
         }
         failure {
-            echo '❌ Pipeline Failed.'
+            echo "❌ Pipeline Failed."
         }
     }
 }
