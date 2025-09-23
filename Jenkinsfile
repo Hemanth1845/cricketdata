@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+         // ===== FRONTEND BUILD =====
         stage('Build Frontend') {
             steps {
                 dir('frontendapp') {
@@ -10,7 +11,8 @@ pipeline {
                 }
             }
         }
-
+        
+           // ===== FRONTEND DEPLOY =====
         stage('Deploy Frontend to Tomcat') {
             steps {
                 bat '''
@@ -22,7 +24,7 @@ pipeline {
                 '''
             }
         }
-
+          // ===== BACKEND BUILD =====
         stage('Build Backend') {
             steps {
                 dir('BACKEND/bccimanagement') {
@@ -30,7 +32,8 @@ pipeline {
                 }
             }
         }
-
+        
+       // ===== BACKEND DEPLOY =====
         stage('Deploy Backend to Tomcat') {
             steps {
                 bat '''
@@ -45,10 +48,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Pipeline completed successfully."
+            echo "Pipeline completed successfully."
         }
         failure {
-            echo "❌ Pipeline Failed."
+            echo " Pipeline Failed."
         }
     }
 }

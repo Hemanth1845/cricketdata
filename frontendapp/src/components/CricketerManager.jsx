@@ -122,7 +122,7 @@
             </div>
         )}
 
-        <h2>Cricket Management System</h2>
+        <h2>Cricket Management Systems</h2>
 
         <div>
             <h3>{editMode ? 'Edit Cricketer' : 'Add Cricketer'}</h3>
